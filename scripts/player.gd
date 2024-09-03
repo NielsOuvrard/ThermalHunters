@@ -45,25 +45,25 @@ func reload():
 func _process(delta):
 	var direction_input = Vector2.ZERO
 
-	if Input.is_action_pressed('move_right'):
+	if Input.is_action_pressed('look_right'):
 		direction_input.x += 1
-	if Input.is_action_pressed('move_left'):
+	if Input.is_action_pressed('look_left'):
 		direction_input.x -= 1
-	if Input.is_action_pressed('move_down'):
+	if Input.is_action_pressed('look_down'):
 		direction_input.y += 1
-	if Input.is_action_pressed('move_up'):
+	if Input.is_action_pressed('look_up'):
 		direction_input.y -= 1
 		
 		
 	var look_direction = Vector2.ZERO
 
-	if Input.is_action_pressed('look_right'):
+	if Input.is_action_pressed('move_right'):
 		look_direction.x += 1
-	if Input.is_action_pressed('look_left'):
+	if Input.is_action_pressed('move_left'):
 		look_direction.x -= 1
-	if Input.is_action_pressed('look_down'):
+	if Input.is_action_pressed('move_down'):
 		look_direction.y += 1
-	if Input.is_action_pressed('look_up'):
+	if Input.is_action_pressed('move_up'):
 		look_direction.y -= 1
 		
 	if look_direction != Vector2.ZERO:
@@ -105,10 +105,8 @@ func _process(delta):
 
 func _on_shoot_cooldown_timeout():
 	can_shoot = true
-	print("can shoot")
 
 
 func _on_reload_cooldown_timeout():
 	is_reloading = false
 	can_shoot = true
-	print("reload done")

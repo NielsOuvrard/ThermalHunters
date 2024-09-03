@@ -754,7 +754,7 @@ shape = SubResource("CircleShape2D_3c7qy")
 sprite_frames = SubResource("SpriteFrames_6i7po")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.887816
+frame_progress = 0.716532
 
 [node name="Body" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_bscpu")

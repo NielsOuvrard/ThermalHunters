@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://c3ti58l2cnx03"]
+[gd_scene load_steps=4 format=3 uid="uid://c3ti58l2cnx03"]
 
 [ext_resource type="PackedScene" uid="uid://bnkhjs011altm" path="res://scenes/player.tscn" id="1_vmwar"]
+[ext_resource type="PackedScene" uid="uid://ci1r7tvbbnwbm" path="res://scenes/zombie.tscn" id="2_57hyv"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_2cwkc"]
 distance = -214.0
@@ -14,5 +15,10 @@ shape = SubResource("WorldBoundaryShape2D_2cwkc")
 
 [node name="Player" parent="." instance=ExtResource("1_vmwar")]
 position = Vector2(-298, -9)
+rotation = -0.0683225
 
 [node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="CharacterBody2D" parent="." instance=ExtResource("2_57hyv")]
+position = Vector2(363, 13)
+rotation = 3.04754

@@ -1,0 +1,196 @@
+[gd_scene load_steps=44 format=3 uid="uid://ci1r7tvbbnwbm"]
+
+[ext_resource type="Script" path="res://scripts/zombie.gd" id="1_1jlek"]
+[ext_resource type="Texture2D" uid="uid://bfwwaafuvpkup" path="res://assets/zombie/attack/skeleton-attack_0.png" id="2_cgybf"]
+[ext_resource type="Texture2D" uid="uid://daj67id3mwegc" path="res://assets/zombie/attack/skeleton-attack_1.png" id="3_yyssu"]
+[ext_resource type="Texture2D" uid="uid://cp3vh3kh60qp7" path="res://assets/zombie/attack/skeleton-attack_2.png" id="4_ulurp"]
+[ext_resource type="Texture2D" uid="uid://x2s2j5wud8gs" path="res://assets/zombie/attack/skeleton-attack_3.png" id="5_rniem"]
+[ext_resource type="Texture2D" uid="uid://j8y770fownkr" path="res://assets/zombie/attack/skeleton-attack_4.png" id="6_bkh2a"]
+[ext_resource type="Texture2D" uid="uid://1ggr460d6jmf" path="res://assets/zombie/attack/skeleton-attack_5.png" id="7_pofu1"]
+[ext_resource type="Texture2D" uid="uid://dunmxhcmahrrh" path="res://assets/zombie/attack/skeleton-attack_6.png" id="8_kh2jt"]
+[ext_resource type="Texture2D" uid="uid://cwty0ltewm1cl" path="res://assets/zombie/attack/skeleton-attack_7.png" id="9_kbncr"]
+[ext_resource type="Texture2D" uid="uid://bxn0voj4d8smd" path="res://assets/zombie/idle/skeleton-idle_0.png" id="10_rrc2f"]
+[ext_resource type="Texture2D" uid="uid://d11cfgdiwahou" path="res://assets/zombie/idle/skeleton-idle_1.png" id="11_wurcj"]
+[ext_resource type="Texture2D" uid="uid://njx2p353gq3y" path="res://assets/zombie/idle/skeleton-idle_2.png" id="12_aihs4"]
+[ext_resource type="Texture2D" uid="uid://ct0i5ixsv68tr" path="res://assets/zombie/idle/skeleton-idle_3.png" id="13_0101i"]
+[ext_resource type="Texture2D" uid="uid://dh6n2d45etq6t" path="res://assets/zombie/idle/skeleton-idle_4.png" id="14_p3m5q"]
+[ext_resource type="Texture2D" uid="uid://dfxh715rdh3q1" path="res://assets/zombie/idle/skeleton-idle_5.png" id="15_cpnhs"]
+[ext_resource type="Texture2D" uid="uid://bj4n1grqopo02" path="res://assets/zombie/idle/skeleton-idle_6.png" id="16_n5ke3"]
+[ext_resource type="Texture2D" uid="uid://bnhgkrdjsdf3c" path="res://assets/zombie/idle/skeleton-idle_7.png" id="17_d3ohc"]
+[ext_resource type="Texture2D" uid="uid://bktrjtvkqyjxd" path="res://assets/zombie/idle/skeleton-idle_8.png" id="18_qm1qr"]
+[ext_resource type="Texture2D" uid="uid://dhdmvcegn5lvh" path="res://assets/zombie/idle/skeleton-idle_9.png" id="19_x452a"]
+[ext_resource type="Texture2D" uid="uid://d0wdt6lxvnpia" path="res://assets/zombie/idle/skeleton-idle_10.png" id="20_4ipbk"]
+[ext_resource type="Texture2D" uid="uid://bqcu3rsfdjmp" path="res://assets/zombie/idle/skeleton-idle_11.png" id="21_yalok"]
+[ext_resource type="Texture2D" uid="uid://chfdhifvlctkm" path="res://assets/zombie/idle/skeleton-idle_12.png" id="22_cls1v"]
+[ext_resource type="Texture2D" uid="uid://dhgsffw3yeyf5" path="res://assets/zombie/idle/skeleton-idle_13.png" id="23_nhyuk"]
+[ext_resource type="Texture2D" uid="uid://dgeys11wvworm" path="res://assets/zombie/idle/skeleton-idle_14.png" id="24_gjd3f"]
+[ext_resource type="Texture2D" uid="uid://c7josg8rahbmm" path="res://assets/zombie/idle/skeleton-idle_15.png" id="25_ykiy4"]
+[ext_resource type="Texture2D" uid="uid://dobgry6o4ywsq" path="res://assets/zombie/move/skeleton-move_0.png" id="26_ybm0o"]
+[ext_resource type="Texture2D" uid="uid://bflinbs1ls0nu" path="res://assets/zombie/move/skeleton-move_1.png" id="27_vrjsi"]
+[ext_resource type="Texture2D" uid="uid://ywr20nwafn5c" path="res://assets/zombie/move/skeleton-move_2.png" id="28_g6453"]
+[ext_resource type="Texture2D" uid="uid://bw4mausgf4pek" path="res://assets/zombie/move/skeleton-move_3.png" id="29_62w6g"]
+[ext_resource type="Texture2D" uid="uid://doo2e04om40mp" path="res://assets/zombie/move/skeleton-move_4.png" id="30_mb4v1"]
+[ext_resource type="Texture2D" uid="uid://31qxdi68pyvx" path="res://assets/zombie/move/skeleton-move_5.png" id="31_eaipw"]
+[ext_resource type="Texture2D" uid="uid://b8guvt4am4ssh" path="res://assets/zombie/move/skeleton-move_6.png" id="32_gul5n"]
+[ext_resource type="Texture2D" uid="uid://ce6mqg7lipky5" path="res://assets/zombie/move/skeleton-move_7.png" id="33_r1lfc"]
+[ext_resource type="Texture2D" uid="uid://cf5xnmw58570r" path="res://assets/zombie/move/skeleton-move_8.png" id="34_225tp"]
+[ext_resource type="Texture2D" uid="uid://dx20vx5hl7au1" path="res://assets/zombie/move/skeleton-move_9.png" id="35_6bjvg"]
+[ext_resource type="Texture2D" uid="uid://dl2g6kfuintnr" path="res://assets/zombie/move/skeleton-move_10.png" id="36_3rvra"]
+[ext_resource type="Texture2D" uid="uid://jnxyofurn45o" path="res://assets/zombie/move/skeleton-move_11.png" id="37_w87vg"]
+[ext_resource type="Texture2D" uid="uid://cjlee8x3dg5rq" path="res://assets/zombie/move/skeleton-move_12.png" id="38_p5xno"]
+[ext_resource type="Texture2D" uid="uid://dvv7ilj8atcav" path="res://assets/zombie/move/skeleton-move_13.png" id="39_m5s7t"]
+[ext_resource type="Texture2D" uid="uid://c4jn3kyji5eap" path="res://assets/zombie/move/skeleton-move_14.png" id="40_covfq"]
+[ext_resource type="Texture2D" uid="uid://btnu1pvq6vypl" path="res://assets/zombie/move/skeleton-move_15.png" id="41_da47m"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_i4em0"]
+radius = 39.0
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_cue7u"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_cgybf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_yyssu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_ulurp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_rniem")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_bkh2a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_pofu1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_kh2jt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_kbncr")
+}],
+"loop": true,
+"name": &"attack",
+"speed": 15.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("10_rrc2f")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_wurcj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_aihs4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_0101i")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_p3m5q")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_cpnhs")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_n5ke3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_d3ohc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_qm1qr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_x452a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_4ipbk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_yalok")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_cls1v")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_nhyuk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_gjd3f")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_ykiy4")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 15.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("26_ybm0o")
+}, {
+"duration": 1.0,
+"texture": ExtResource("27_vrjsi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_g6453")
+}, {
+"duration": 1.0,
+"texture": ExtResource("29_62w6g")
+}, {
+"duration": 1.0,
+"texture": ExtResource("30_mb4v1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("31_eaipw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("32_gul5n")
+}, {
+"duration": 1.0,
+"texture": ExtResource("33_r1lfc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("34_225tp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("35_6bjvg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("36_3rvra")
+}, {
+"duration": 1.0,
+"texture": ExtResource("37_w87vg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("38_p5xno")
+}, {
+"duration": 1.0,
+"texture": ExtResource("39_m5s7t")
+}, {
+"duration": 1.0,
+"texture": ExtResource("40_covfq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("41_da47m")
+}],
+"loop": true,
+"name": &"move",
+"speed": 15.0
+}]
+
+[node name="CharacterBody2D" type="CharacterBody2D"]
+script = ExtResource("1_1jlek")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_i4em0")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_cue7u")
+animation = &"move"
+autoplay = "idle"
+frame_progress = 0.904868
