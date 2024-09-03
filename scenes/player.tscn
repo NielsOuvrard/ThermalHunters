@@ -1,4 +1,4 @@
-[gd_scene load_steps=167 format=3 uid="uid://bnkhjs011altm"]
+[gd_scene load_steps=168 format=3 uid="uid://bnkhjs011altm"]
 
 [ext_resource type="Texture2D" uid="uid://cuqq6fwc7rxda" path="res://assets/handgun/idle/survivor-idle_handgun_0.png" id="1_c23so"]
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_gbbei"]
@@ -161,6 +161,10 @@
 [ext_resource type="AudioStream" uid="uid://cx0j06jlxw3sc" path="res://assets/sounds/pistol_reload.mp3" id="159_r6wpc"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_3c7qy"]
+radius = 80.0062
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_mln1s"]
+height = 32.8244
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_6i7po"]
 animations = [{
@@ -684,33 +688,6 @@ animations = [{
 shader = ExtResource("156_u6s8h")
 shader_parameter/tolerance = 0.1
 
-[sub_resource type="Animation" id="Animation_ulet6"]
-resource_name = "shoot"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("MuzzleFlash01:visible")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [true, false]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("pistol_shoot:playing")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 1),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [true, false]
-}
-
 [sub_resource type="Animation" id="Animation_pea4m"]
 length = 0.001
 tracks/0/type = "value"
@@ -738,6 +715,33 @@ tracks/1/keys = {
 "values": [false]
 }
 
+[sub_resource type="Animation" id="Animation_ulet6"]
+resource_name = "shoot"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MuzzleFlash01:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("pistol_shoot:playing")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ekjrk"]
 _data = {
 "RESET": SubResource("Animation_pea4m"),
@@ -750,11 +754,17 @@ script = ExtResource("1_gbbei")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_3c7qy")
 
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="."]
+position = Vector2(-9, 2)
+rotation = 0.800218
+scale = Vector2(4.92, 5.24)
+shape = SubResource("CapsuleShape2D_mln1s")
+
 [node name="Feet" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_6i7po")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.716532
+frame_progress = 0.784936
 
 [node name="Body" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_bscpu")
@@ -772,7 +782,7 @@ one_shot = true
 [node name="MuzzleFlash01" type="Sprite2D" parent="."]
 visible = false
 material = SubResource("ShaderMaterial_d2ykc")
-position = Vector2(212, 65)
+position = Vector2(212, 58)
 texture = ExtResource("157_8ebyy")
 
 [node name="pistol_shoot" type="AudioStreamPlayer" parent="."]
@@ -785,6 +795,13 @@ libraries = {
 
 [node name="pistol_reload" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("159_r6wpc")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_left = 117.0
+offset_top = 45.0
+offset_right = 157.0
+offset_bottom = 85.0
+scale = Vector2(7.91883, 0.0982664)
 
 [connection signal="timeout" from="ShootCooldown" to="." method="_on_shoot_cooldown_timeout"]
 [connection signal="timeout" from="ReloadCooldown" to="." method="_on_reload_cooldown_timeout"]

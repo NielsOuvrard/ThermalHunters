@@ -8,17 +8,28 @@ distance = -214.0
 
 [node name="Game" type="Node2D"]
 
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
-shape = SubResource("WorldBoundaryShape2D_2cwkc")
+[node name="Zombie" parent="." instance=ExtResource("2_57hyv")]
+position = Vector2(441, -11)
+rotation = 2.74073
 
 [node name="Player" parent="." instance=ExtResource("1_vmwar")]
-position = Vector2(-298, -9)
+position = Vector2(2.08165e-12, 2.08165e-12)
 rotation = -0.0683225
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="Player"]
+position = Vector2(-1.93468e-12, -2.2189e-12)
+rotation = 0.0683225
+position_smoothing_enabled = true
 
-[node name="CharacterBody2D" parent="." instance=ExtResource("2_57hyv")]
-position = Vector2(363, 13)
-rotation = 3.04754
+[node name="WallColider" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallColider"]
+position = Vector2(0, 110)
+shape = SubResource("WorldBoundaryShape2D_2cwkc")
+
+[node name="Wall" type="ColorRect" parent="."]
+offset_left = -778.0
+offset_top = 324.0
+offset_right = -738.0
+offset_bottom = 364.0
+scale = Vector2(43.08, 1)

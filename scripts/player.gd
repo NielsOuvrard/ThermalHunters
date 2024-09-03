@@ -15,6 +15,7 @@ var can_shoot = true
 var is_reloading = false
 
 var bullets = MAX_BULLETS
+var frame = 0
 
 #var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
@@ -41,6 +42,34 @@ func reload():
 	pistol_reload.play()
 	bullets = MAX_BULLETS
 
+
+func rotation_player():
+	## * IF WE USE THE KEYBOARD TO LOOK THE PLAYER
+	#var look_direction = Vector2.ZERO
+	#if Input.is_action_pressed('move_right'):
+		#look_direction.x += 1
+	#if Input.is_action_pressed('move_left'):
+		#look_direction.x -= 1
+	#if Input.is_action_pressed('move_down'):
+		#look_direction.y += 1
+	#if Input.is_action_pressed('move_up'):
+		#look_direction.y -= 1
+		#
+	#if look_direction != Vector2.ZERO:
+		#rotation = look_direction.angle()
+
+	var window_size = get_viewport().get_visible_rect().size
+	var mouse_position = get_viewport().get_mouse_position() - window_size / 2
+	
+	## * IF THE CAMERA IS FIXED
+	# var vector_look = Vector2(mouse_position.x - position.x, mouse_position.y - position.y)
+	## * IF THE CAMERA FOLLOWS THE PLAYER
+	var vector_look = mouse_position
+	
+	return vector_look.angle() - 0.15 # 0.5 is the offset to make the player look at the mouse
+	
+
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	var direction_input = Vector2.ZERO
@@ -54,29 +83,21 @@ func _process(delta):
 	if Input.is_action_pressed('look_up'):
 		direction_input.y -= 1
 		
-		
-	var look_direction = Vector2.ZERO
-
-	if Input.is_action_pressed('move_right'):
-		look_direction.x += 1
-	if Input.is_action_pressed('move_left'):
-		look_direction.x -= 1
-	if Input.is_action_pressed('move_down'):
-		look_direction.y += 1
-	if Input.is_action_pressed('move_up'):
-		look_direction.y -= 1
-		
-	if look_direction != Vector2.ZERO:
-		rotation = look_direction.angle()
+	frame += delta
+	rotation = rotation_player()
 
 	var direction = direction_input
-	direction.x *= 0.7 # Reduce diagonal speed
+	# direction.x *= 0.7 # Reduce diagonal speed
 	direction = direction.rotated(rotation + (PI / 2))
 	if direction != Vector2.ZERO:
 		velocity = delta * direction * SPEED
 	else:
 		velocity = Vector2.ZERO
 		
+	if frame > 0.1:
+		frame = 0
+		print(velocity.length())
+	
 	if Input.is_action_pressed('shoot') and can_shoot:
 		shoot()
 	
