@@ -4,9 +4,17 @@ extends CharacterBody2D
 @onready var animated_body = $Body
 @onready var animated_feet = $Feet
 @onready var shoot_cooldown = $ShootCooldown
+@onready var reload_cooldown = $ReloadCooldown
+@onready var animation_player = $AnimationPlayer
+@onready var pistol_reload = $pistol_reload
 
-const SPEED = 300.0
-var is_shooting = false
+const SPEED = 30000.0
+const MAX_BULLETS = 6
+
+var can_shoot = true
+var is_reloading = false
+
+var bullets = MAX_BULLETS
 
 #var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
@@ -14,6 +22,24 @@ var is_shooting = false
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass
+
+func shoot():
+	can_shoot = false
+	if bullets <= 0:
+		reload()
+		return
+	shoot_cooldown.start()
+	animated_body.play("shoot")
+	animation_player.stop()
+	animation_player.play("shoot")
+	bullets -= 1
+
+func reload():
+	reload_cooldown.start()
+	animated_body.play("reload")
+	is_reloading = true
+	pistol_reload.play()
+	bullets = MAX_BULLETS
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -47,14 +73,15 @@ func _process(delta):
 	direction.x *= 0.7 # Reduce diagonal speed
 	direction = direction.rotated(rotation + (PI / 2))
 	if direction != Vector2.ZERO:
-		velocity = direction * SPEED
+		velocity = delta * direction * SPEED
 	else:
 		velocity = Vector2.ZERO
 		
-	if Input.is_action_pressed('shoot') and not is_shooting:
-		shoot_cooldown.start()
-		animated_body.play("shoot")
-		is_shooting = true
+	if Input.is_action_pressed('shoot') and can_shoot:
+		shoot()
+	
+	if Input.is_action_pressed('reload') and not is_reloading:
+		reload()
 	
 	if not animated_body.is_playing():
 		# TODO something for trarfe
@@ -77,4 +104,11 @@ func _process(delta):
 
 
 func _on_shoot_cooldown_timeout():
-	is_shooting = false
+	can_shoot = true
+	print("can shoot")
+
+
+func _on_reload_cooldown_timeout():
+	is_reloading = false
+	can_shoot = true
+	print("reload done")

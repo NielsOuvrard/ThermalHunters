@@ -1,4 +1,4 @@
-[gd_scene load_steps=159 format=3 uid="uid://bnkhjs011altm"]
+[gd_scene load_steps=167 format=3 uid="uid://bnkhjs011altm"]
 
 [ext_resource type="Texture2D" uid="uid://cuqq6fwc7rxda" path="res://assets/handgun/idle/survivor-idle_handgun_0.png" id="1_c23so"]
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_gbbei"]
@@ -155,6 +155,10 @@
 [ext_resource type="Texture2D" uid="uid://dm2yipnh4bcmq" path="res://assets/feet/walk/survivor-walk_17.png" id="153_8bac4"]
 [ext_resource type="Texture2D" uid="uid://clwq0y1ayp3iw" path="res://assets/feet/walk/survivor-walk_18.png" id="154_ld3qw"]
 [ext_resource type="Texture2D" uid="uid://d2xy551chml43" path="res://assets/feet/walk/survivor-walk_19.png" id="155_io3s2"]
+[ext_resource type="Shader" path="res://scenes/muzzleflash.gdshader" id="156_u6s8h"]
+[ext_resource type="Texture2D" uid="uid://b15f31i7h88id" path="res://assets/items/muzzle_flash_01.png" id="157_8ebyy"]
+[ext_resource type="AudioStream" uid="uid://ckrbcapvlk7cm" path="res://assets/sounds/pistol_shoot.mp3" id="158_fv768"]
+[ext_resource type="AudioStream" uid="uid://cx0j06jlxw3sc" path="res://assets/sounds/pistol_reload.mp3" id="159_r6wpc"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_3c7qy"]
 
@@ -676,6 +680,70 @@ animations = [{
 "speed": 15.0
 }]
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_d2ykc"]
+shader = ExtResource("156_u6s8h")
+shader_parameter/tolerance = 0.1
+
+[sub_resource type="Animation" id="Animation_ulet6"]
+resource_name = "shoot"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MuzzleFlash01:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("pistol_shoot:playing")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="Animation" id="Animation_pea4m"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MuzzleFlash01:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("pistol_shoot:playing")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ekjrk"]
+_data = {
+"RESET": SubResource("Animation_pea4m"),
+"shoot": SubResource("Animation_ulet6")
+}
+
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_gbbei")
 
@@ -686,13 +754,37 @@ shape = SubResource("CircleShape2D_3c7qy")
 sprite_frames = SubResource("SpriteFrames_6i7po")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.89079
+frame_progress = 0.887816
 
 [node name="Body" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_bscpu")
-animation = &"shoot"
+animation = &"reload"
 autoplay = "idle"
 
 [node name="ShootCooldown" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true
+
+[node name="ReloadCooldown" type="Timer" parent="."]
+wait_time = 0.93
+one_shot = true
+
+[node name="MuzzleFlash01" type="Sprite2D" parent="."]
+visible = false
+material = SubResource("ShaderMaterial_d2ykc")
+position = Vector2(212, 65)
+texture = ExtResource("157_8ebyy")
+
+[node name="pistol_shoot" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("158_fv768")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_ekjrk")
+}
+
+[node name="pistol_reload" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("159_r6wpc")
 
 [connection signal="timeout" from="ShootCooldown" to="." method="_on_shoot_cooldown_timeout"]
+[connection signal="timeout" from="ReloadCooldown" to="." method="_on_reload_cooldown_timeout"]
