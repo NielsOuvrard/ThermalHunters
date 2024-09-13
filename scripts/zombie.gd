@@ -6,5 +6,6 @@ const JUMP_VELOCITY = -400.0
 
 
 func _physics_process(delta):
+	pass
 	# Add the gravity.
-	move_and_slide()
+	#move_and_slide()

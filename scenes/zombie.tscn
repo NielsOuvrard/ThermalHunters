@@ -1,4 +1,4 @@
-[gd_scene load_steps=44 format=3 uid="uid://ci1r7tvbbnwbm"]
+[gd_scene load_steps=45 format=3 uid="uid://ci1r7tvbbnwbm"]
 
 [ext_resource type="Script" path="res://scripts/zombie.gd" id="1_1jlek"]
 [ext_resource type="Texture2D" uid="uid://bfwwaafuvpkup" path="res://assets/zombie/attack/skeleton-attack_0.png" id="2_cgybf"]
@@ -41,9 +41,9 @@
 [ext_resource type="Texture2D" uid="uid://dvv7ilj8atcav" path="res://assets/zombie/move/skeleton-move_13.png" id="39_m5s7t"]
 [ext_resource type="Texture2D" uid="uid://c4jn3kyji5eap" path="res://assets/zombie/move/skeleton-move_14.png" id="40_covfq"]
 [ext_resource type="Texture2D" uid="uid://btnu1pvq6vypl" path="res://assets/zombie/move/skeleton-move_15.png" id="41_da47m"]
+[ext_resource type="Texture2D" uid="uid://d4cq0bywf6hjk" path="res://assets/items/splatter2.png" id="42_5sqo0"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_i4em0"]
-radius = 39.0
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_tr8so"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_cue7u"]
 animations = [{
@@ -187,10 +187,17 @@ animations = [{
 script = ExtResource("1_1jlek")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_i4em0")
+position = Vector2(-40, 15)
+scale = Vector2(5.88, 7.04)
+shape = SubResource("CapsuleShape2D_tr8so")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_cue7u")
 animation = &"move"
 autoplay = "idle"
 frame_progress = 0.904868
+
+[node name="Blood" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(80, 36)
+texture = ExtResource("42_5sqo0")

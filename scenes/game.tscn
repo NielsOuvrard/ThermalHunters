@@ -12,12 +12,21 @@ distance = -214.0
 position = Vector2(441, -11)
 rotation = 2.74073
 
+[node name="Zombie2" parent="." instance=ExtResource("2_57hyv")]
+position = Vector2(-211, -684)
+
+[node name="Zombie3" parent="." instance=ExtResource("2_57hyv")]
+position = Vector2(402, -664)
+
+[node name="Zombie4" parent="." instance=ExtResource("2_57hyv")]
+position = Vector2(82, -418)
+
 [node name="Player" parent="." instance=ExtResource("1_vmwar")]
 position = Vector2(2.08165e-12, 2.08165e-12)
 rotation = -0.0683225
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
-position = Vector2(-1.93468e-12, -2.2189e-12)
+position = Vector2(-1.93468e-12, -2.21891e-12)
 rotation = 0.0683225
 position_smoothing_enabled = true
 

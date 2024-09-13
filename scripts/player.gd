@@ -1,18 +1,22 @@
 extends CharacterBody2D
 
 @export var speed = 200  # Speed of the player
-@onready var animated_body = $Body
+@onready var animated_body = $BodyLight
 @onready var animated_feet = $Feet
 @onready var shoot_cooldown = $ShootCooldown
 @onready var reload_cooldown = $ReloadCooldown
 @onready var animation_player = $AnimationPlayer
 @onready var pistol_reload = $pistol_reload
+@onready var raycast = $RayCast2D
+
+const BLOOD = preload("res://scenes/blood.tscn")
 
 const SPEED = 30000.0
 const MAX_BULLETS = 6
 
 var can_shoot = true
 var is_reloading = false
+var is_punching = false
 
 var bullets = MAX_BULLETS
 var frame = 0
@@ -35,6 +39,15 @@ func shoot():
 	animation_player.play("shoot")
 	bullets -= 1
 
+	if raycast.is_colliding():
+		var collider = raycast.get_collider()
+		# if collider.is_in_group("enemies"):
+		# 	collider.take_damage(10)
+		var blood = BLOOD.instantiate()
+		get_parent().add_child(blood)
+		blood.position = raycast.get_collision_point()
+		collider.queue_free()
+
 func reload():
 	reload_cooldown.start()
 	animated_body.play("reload")
@@ -42,6 +55,11 @@ func reload():
 	pistol_reload.play()
 	bullets = MAX_BULLETS
 
+
+func melee_attack():
+	reload_cooldown.start()
+	is_punching = true
+	animated_body.play("meleeattack")
 
 func rotation_player():
 	## * IF WE USE THE KEYBOARD TO LOOK THE PLAYER
@@ -83,7 +101,6 @@ func _process(delta):
 	if Input.is_action_pressed('look_up'):
 		direction_input.y -= 1
 		
-	frame += delta
 	rotation = rotation_player()
 
 	var direction = direction_input
@@ -94,15 +111,20 @@ func _process(delta):
 	else:
 		velocity = Vector2.ZERO
 		
+	frame += delta
 	if frame > 0.1:
 		frame = 0
-		print(velocity.length())
+		#print(velocity.length())
 	
 	if Input.is_action_pressed('shoot') and can_shoot:
 		shoot()
 	
 	if Input.is_action_pressed('reload') and not is_reloading:
 		reload()
+	
+	
+	if Input.is_action_pressed('melee_attack') and not is_punching:
+		melee_attack()
 	
 	if not animated_body.is_playing():
 		# TODO something for trarfe
@@ -131,3 +153,4 @@ func _on_shoot_cooldown_timeout():
 func _on_reload_cooldown_timeout():
 	is_reloading = false
 	can_shoot = true
+	is_punching = false
