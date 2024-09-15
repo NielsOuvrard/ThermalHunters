@@ -1,7 +1,7 @@
 extends CharacterBody2D
 
 @export var speed = 200  # Speed of the player
-@onready var animated_body = $BodyLight
+@onready var animated_body = $Body
 @onready var animated_feet = $Feet
 @onready var shoot_cooldown = $ShootCooldown
 @onready var reload_cooldown = $ReloadCooldown
@@ -14,52 +14,118 @@ const BLOOD = preload("res://scenes/blood.tscn")
 const SPEED = 30000.0
 const MAX_BULLETS = 6
 
-var can_shoot = true
-var is_reloading = false
-var is_punching = false
 
-var bullets = MAX_BULLETS
-var frame = 0
+enum State {
+	IDLE,
+	WALKING,
+	RUNNING,
+	SHOOTING,
+	RELOAD
+}
 
-#var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
+enum Hold {
+	FLASHLIGHT,
+	PISTOL,
+	RIFLE,
+	SHOTGUN
+}
+
+class Player:
+	var state := State.IDLE
+	var hold := Hold.PISTOL
+
+	var can_shoot := true
+	var is_reloading := false
+	var is_punching := false
+
+	var bullets := MAX_BULLETS
+
+	var animated_body
+	var animated_feet
+	var shoot_cooldown
+	var reload_cooldown
+	var animation_player
+	var pistol_reload
+	var raycast
+	var parent_node
+
+	var hold_to_animation = {
+		Hold.FLASHLIGHT: "light",
+		Hold.PISTOL: "pistol",
+		Hold.RIFLE: "rifle",
+		Hold.SHOTGUN: "shotgun"
+	}
+	var state_to_animation = {
+		State.IDLE: "idle",
+		State.WALKING: "move",
+		State.RUNNING: "run",
+		State.SHOOTING: "shoot",
+		State.RELOAD: "reload"
+	}
+
+	func _init(animated_body, animated_feet, shoot_cooldown, reload_cooldown, animation_player, pistol_reload, raycast, parent_node):
+		self.animated_body = animated_body
+		self.animated_feet = animated_feet
+		self.shoot_cooldown = shoot_cooldown
+		self.reload_cooldown = reload_cooldown
+		self.animation_player = animation_player
+		self.pistol_reload = pistol_reload
+		self.raycast = raycast
+		self.parent_node = parent_node
+		print("Player created")
+		print(animated_body) # <null>
+		print(animated_feet) # <null>
+		print(shoot_cooldown) # <null>
+		print(reload_cooldown) # <null>
+		print(animation_player) # <null>
+		print(pistol_reload) # <null>
+		print(raycast) # <null>
+		print(parent_node) # <CharacterBody2D#83399541991>
+
+	func update_animation():
+		animation_player.play(hold_to_animation[hold] + "_" + state_to_animation[state])
 
 
-# Called when the node enters the scene tree for the first time.
+	func shoot():
+		can_shoot = false
+		if bullets <= 0:
+			reload()
+			return
+		shoot_cooldown.start()
+		update_animation()
+		animation_player.stop()
+		animation_player.play("shoot") # sound y flash
+		bullets -= 1
+
+		if raycast.is_colliding():
+			var collider = raycast.get_collider()
+			# if collider.is_in_group("enemies"):
+			# 	collider.take_damage(10)
+			var blood = BLOOD.instantiate()
+			parent_node.add_child(blood) # use to be get_parent().add_child(blood)
+			blood.position = raycast.get_collision_point()
+			collider.queue_free()
+
+	func reload():
+		state = State.RELOAD
+		reload_cooldown.start()
+		update_animation()
+		is_reloading = true
+		pistol_reload.play()
+		bullets = MAX_BULLETS
+
+
+	func melee_attack():
+		reload_cooldown.start()
+		is_punching = true
+		update_animation()
+
+var frame := 0 # for debug
+var player
+
 func _ready():
-	pass
+	player = Player.new(animated_body, animated_feet, shoot_cooldown, reload_cooldown, animation_player, pistol_reload, raycast, self)
 
-func shoot():
-	can_shoot = false
-	if bullets <= 0:
-		reload()
-		return
-	shoot_cooldown.start()
-	animated_body.play("shoot")
-	animation_player.stop()
-	animation_player.play("shoot")
-	bullets -= 1
-
-	if raycast.is_colliding():
-		var collider = raycast.get_collider()
-		# if collider.is_in_group("enemies"):
-		# 	collider.take_damage(10)
-		var blood = BLOOD.instantiate()
-		get_parent().add_child(blood)
-		blood.position = raycast.get_collision_point()
-		collider.queue_free()
-
-func reload():
-	reload_cooldown.start()
-	animated_body.play("reload")
-	is_reloading = true
-	pistol_reload.play()
-	bullets = MAX_BULLETS
-
-
-func melee_attack():
-	reload_cooldown.start()
-	is_punching = true
-	animated_body.play("meleeattack")
 
 func rotation_player():
 	## * IF WE USE THE KEYBOARD TO LOOK THE PLAYER
@@ -116,22 +182,24 @@ func _process(delta):
 		frame = 0
 		#print(velocity.length())
 	
-	if Input.is_action_pressed('shoot') and can_shoot:
-		shoot()
+	if Input.is_action_pressed('shoot') and player.can_shoot:
+		player.shoot()
 	
-	if Input.is_action_pressed('reload') and not is_reloading:
-		reload()
+	if Input.is_action_pressed('reload') and not player.is_reloading:
+		player.reload()
 	
 	
-	if Input.is_action_pressed('melee_attack') and not is_punching:
-		melee_attack()
+	if Input.is_action_pressed('melee_attack') and not player.is_punching:
+		player.melee_attack()
 	
 	if not animated_body.is_playing():
 		# TODO something for trarfe
 		if direction_input != Vector2.ZERO:
-			animated_body.play("move")
+			player.state = State.WALKING
+			player.update_animation()
 		else:
-			animated_body.play("idle")
+			player.state = State.IDLE
+			player.update_animation()
 	
 	if direction_input != Vector2.ZERO:
 		if direction_input.x == 1:
@@ -147,10 +215,10 @@ func _process(delta):
 
 
 func _on_shoot_cooldown_timeout():
-	can_shoot = true
+	player.can_shoot = true
 
 
 func _on_reload_cooldown_timeout():
-	is_reloading = false
-	can_shoot = true
-	is_punching = false
+	player.is_reloading = false
+	player.can_shoot = true
+	player.is_punching = false
