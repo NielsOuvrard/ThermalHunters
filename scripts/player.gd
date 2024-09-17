@@ -63,15 +63,15 @@ class Player:
 		State.RELOAD: "reload"
 	}
 
-	func _init(animated_body, animated_feet, shoot_cooldown, reload_cooldown, animation_player, pistol_reload, raycast, parent_node):
-		self.animated_body = animated_body
-		self.animated_feet = animated_feet
-		self.shoot_cooldown = shoot_cooldown
-		self.reload_cooldown = reload_cooldown
-		self.animation_player = animation_player
-		self.pistol_reload = pistol_reload
-		self.raycast = raycast
-		self.parent_node = parent_node
+	func _init(_animated_body, _animated_feet, _shoot_cooldown, _reload_cooldown, _animation_player, _pistol_reload, _raycast, _parent_node):
+		self.animated_body = _animated_body
+		self.animated_feet = _animated_feet
+		self.shoot_cooldown = _shoot_cooldown
+		self.reload_cooldown = _reload_cooldown
+		self.animation_player = _animation_player
+		self.pistol_reload = _pistol_reload
+		self.raycast = _raycast
+		self.parent_node = _parent_node
 		print("Player created")
 		print(animated_body) # <null>
 		print(animated_feet) # <null>
@@ -102,7 +102,7 @@ class Player:
 			# if collider.is_in_group("enemies"):
 			# 	collider.take_damage(10)
 			var blood = BLOOD.instantiate()
-			parent_node.add_child(blood) # use to be get_parent().add_child(blood)
+			parent_node.get_parent().add_child(blood) # use to be get_parent().add_child(blood)
 			blood.position = raycast.get_collision_point()
 			collider.queue_free()
 
