@@ -449,7 +449,7 @@ frame_progress = 0.784936
 
 [node name="Body" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("83_tqr4m")
-animation = &"pistol_idle"
+animation = &"pistol_punch"
 autoplay = "idle"
 
 [node name="Control" type="Control" parent="."]

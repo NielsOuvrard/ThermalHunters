@@ -20,7 +20,8 @@ enum State {
 	WALKING,
 	RUNNING,
 	SHOOTING,
-	RELOAD
+	RELOAD,
+	PUNCH
 }
 
 enum Hold {
@@ -60,7 +61,8 @@ class Player:
 		State.WALKING: "move",
 		State.RUNNING: "run",
 		State.SHOOTING: "shoot",
-		State.RELOAD: "reload"
+		State.RELOAD: "reload",
+		State.PUNCH: "punch"
 	}
 
 	func _init(_animated_body, _animated_feet, _shoot_cooldown, _reload_cooldown, _animation_player, _pistol_reload, _raycast, _parent_node):
@@ -83,7 +85,7 @@ class Player:
 		print(parent_node) # <CharacterBody2D#83399541991>
 
 	func update_animation():
-		animation_player.play(hold_to_animation[hold] + "_" + state_to_animation[state])
+		animated_body.play(hold_to_animation[hold] + "_" + state_to_animation[state])
 
 
 	func shoot():
@@ -91,6 +93,7 @@ class Player:
 		if bullets <= 0:
 			reload()
 			return
+		state = State.SHOOTING
 		shoot_cooldown.start()
 		update_animation()
 		animation_player.stop()
@@ -109,13 +112,13 @@ class Player:
 	func reload():
 		state = State.RELOAD
 		reload_cooldown.start()
-		update_animation()
 		is_reloading = true
 		pistol_reload.play()
 		bullets = MAX_BULLETS
-
+		update_animation()
 
 	func melee_attack():
+		state = State.PUNCH
 		reload_cooldown.start()
 		is_punching = true
 		update_animation()
@@ -188,18 +191,16 @@ func _process(delta):
 	if Input.is_action_pressed('reload') and not player.is_reloading:
 		player.reload()
 	
-	
 	if Input.is_action_pressed('melee_attack') and not player.is_punching:
 		player.melee_attack()
 	
-	if not animated_body.is_playing():
-		# TODO something for trarfe
+
+	if not animated_body.is_playing(): # if not state reload nor shoot
 		if direction_input != Vector2.ZERO:
 			player.state = State.WALKING
-			player.update_animation()
 		else:
 			player.state = State.IDLE
-			player.update_animation()
+		player.update_animation()
 	
 	if direction_input != Vector2.ZERO:
 		if direction_input.x == 1:
