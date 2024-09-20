@@ -29,6 +29,38 @@ enum Hold {
 	SHOTGUN
 }
 
+enum ControllerType {
+	XBOX,
+	PLAYSTATION,
+	SWITCH,
+	SWITCH_JOYCON_LEFT,
+	SWITCH_JOYCON_RIGHT,
+	STEAM_DECK,
+	GENERIC
+}
+
+func _deduce_controller_type_from_name(controller_name: String) -> ControllerType:
+	if controller_name.contains("XInput") or\
+			controller_name.contains("Xbox"):
+		return ControllerType.XBOX
+	elif controller_name.contains("Sony") or\
+			controller_name.contains("Playstation") or\
+			controller_name.contains("PS4") or\
+			controller_name.contains("PS5") or \
+			controller_name.contains("DualSense"):
+		return ControllerType.PLAYSTATION
+	elif controller_name.contains("Joy-Con"):
+		if controller_name.contains("(L)"):
+			return ControllerType.SWITCH_JOYCON_LEFT
+		else:
+			return ControllerType.SWITCH_JOYCON_RIGHT
+	elif controller_name.contains("Switch"):
+		return ControllerType.SWITCH
+	elif controller_name.contains("Steam"): # SteamManager.is_on_steam_deck or
+		return ControllerType.STEAM_DECK
+	
+	return ControllerType.GENERIC
+
 class Player:
 	var state := State.IDLE
 	var hold := Hold.PISTOL
@@ -129,18 +161,22 @@ func _ready():
 
 func rotation_player():
 	## * IF WE USE THE KEYBOARD TO LOOK THE PLAYER
-	#var look_direction = Vector2.ZERO
-	#if Input.is_action_pressed('move_right'):
-		#look_direction.x += 1
-	#if Input.is_action_pressed('move_left'):
-		#look_direction.x -= 1
-	#if Input.is_action_pressed('move_down'):
-		#look_direction.y += 1
-	#if Input.is_action_pressed('move_up'):
-		#look_direction.y -= 1
-		#
-	#if look_direction != Vector2.ZERO:
-		#rotation = look_direction.angle()
+	var direction_input = Vector2.ZERO
+
+	if Input.is_action_pressed('look_right'):
+		direction_input.x += Input.get_action_strength('look_right')
+	if Input.is_action_pressed('look_left'):
+		direction_input.x -= Input.get_action_strength('look_left')
+	if Input.is_action_pressed('look_down'):
+		direction_input.y += Input.get_action_strength('look_down')
+	if Input.is_action_pressed('look_up'):
+		direction_input.y -= Input.get_action_strength('look_up')
+	return direction_input
+	"""
+	if direction_input != Vector2.ZERO:
+		rotation = direction_input.angle()
+	else:
+		rotation = 0
 
 	var window_size = get_viewport().get_visible_rect().size
 	var mouse_position = get_viewport().get_mouse_position() - window_size / 2
@@ -150,7 +186,10 @@ func rotation_player():
 	## * IF THE CAMERA FOLLOWS THE PLAYER
 	var vector_look = mouse_position
 	
-	return vector_look.angle()  - 0.025 # 0.5 is the offset to make the player look at the mouse
+	# return vector_look.angle()  - 0.025 # 0.5 is the offset to make the player look at the mouse
+	## * IF WE USE THE KEYBOARD TO LOOK THE PLAYER
+	return rotation
+	"""
 	
 
 
@@ -158,20 +197,22 @@ func rotation_player():
 func _process(delta):
 	var direction_input = Vector2.ZERO
 
-	if Input.is_action_pressed('look_right'):
-		direction_input.x += 1
-	if Input.is_action_pressed('look_left'):
-		direction_input.x -= 1
-	if Input.is_action_pressed('look_down'):
-		direction_input.y += 1
-	if Input.is_action_pressed('look_up'):
-		direction_input.y -= 1
+	if Input.is_action_pressed('fmove_right'):
+		direction_input.x += Input.get_action_strength('fmove_right')
+	if Input.is_action_pressed('fmove_left'):
+		direction_input.x -= Input.get_action_strength('fmove_left')
+	if Input.is_action_pressed('fmove_down'):
+		direction_input.y += Input.get_action_strength('fmove_down')
+	if Input.is_action_pressed('fmove_up'):
+		direction_input.y -= Input.get_action_strength('fmove_up')
 		
-	rotation = rotation_player()
+	var rotation_vector = rotation_player()
+	if rotation_vector != Vector2.ZERO:
+		rotation = rotation_vector.
 
 	var direction = direction_input
 	# direction.x *= 0.7 # Reduce diagonal speed
-	direction = direction.rotated(rotation + (PI / 2))
+	# direction = direction.rotated(rotation + (PI / 2))
 	if direction != Vector2.ZERO:
 		velocity = delta * direction * SPEED
 	else:
