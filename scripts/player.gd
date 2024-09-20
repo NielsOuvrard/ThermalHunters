@@ -208,7 +208,7 @@ func _process(delta):
 		
 	var rotation_vector = rotation_player()
 	if rotation_vector != Vector2.ZERO:
-		rotation = rotation_vector.
+		rotation = rotation_vector.angle()
 
 	var direction = direction_input
 	# direction.x *= 0.7 # Reduce diagonal speed
