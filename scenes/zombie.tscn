@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://ci1r7tvbbnwbm"]
+[gd_scene load_steps=46 format=3 uid="uid://ci1r7tvbbnwbm"]
 
 [ext_resource type="Script" path="res://scripts/zombie.gd" id="1_1jlek"]
 [ext_resource type="Texture2D" uid="uid://bfwwaafuvpkup" path="res://assets/zombie/attack/skeleton-attack_0.png" id="2_cgybf"]
@@ -44,6 +44,9 @@
 [ext_resource type="Texture2D" uid="uid://d4cq0bywf6hjk" path="res://assets/items/splatter2.png" id="42_5sqo0"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_tr8so"]
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_8acoa"]
+polygon = PackedVector2Array(-23, 17, -26, -12, -41, -38, -63, -10, -67, 17, -48, 60)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_cue7u"]
 animations = [{
@@ -190,6 +193,9 @@ script = ExtResource("1_1jlek")
 position = Vector2(-40, 15)
 scale = Vector2(5.88, 7.04)
 shape = SubResource("CapsuleShape2D_tr8so")
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("OccluderPolygon2D_8acoa")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_cue7u")

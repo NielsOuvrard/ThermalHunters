@@ -1,6 +1,5 @@
 extends CharacterBody2D
 
-@export var speed = 200  # Speed of the player
 @onready var animated_body = $Body
 @onready var animated_feet = $Feet
 @onready var shoot_cooldown = $ShootCooldown
@@ -9,10 +8,9 @@ extends CharacterBody2D
 @onready var pistol_reload = $pistol_reload
 @onready var raycast = $RayCast2D
 
-const BLOOD = preload("res://scenes/blood.tscn")
-
-const SPEED = 30000.0
+@export var SPEED = 300.0
 const MAX_BULLETS = 6
+const BLOOD = preload("res://scenes/blood.tscn")
 
 
 enum State {
@@ -102,12 +100,11 @@ class Player:
 
 		if raycast.is_colliding():
 			var collider = raycast.get_collider()
-			# if collider.is_in_group("enemies"):
-			# 	collider.take_damage(10)
-			var blood = BLOOD.instantiate()
-			parent_node.get_parent().add_child(blood) # use to be get_parent().add_child(blood)
-			blood.position = raycast.get_collision_point()
-			collider.queue_free()
+			if collider.is_in_group("enemies"):
+				var blood = BLOOD.instantiate()
+				parent_node.get_parent().add_child(blood)
+				blood.position = raycast.get_collision_point()
+				collider.queue_free()
 
 	func reload():
 		state = State.RELOAD
@@ -153,7 +150,7 @@ func rotation_player():
 	## * IF THE CAMERA FOLLOWS THE PLAYER
 	var vector_look = mouse_position
 	
-	return vector_look.angle() - 0.15 # 0.5 is the offset to make the player look at the mouse
+	return vector_look.angle()  - 0.025 # 0.5 is the offset to make the player look at the mouse
 	
 
 

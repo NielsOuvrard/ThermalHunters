@@ -1,4 +1,4 @@
-[gd_scene load_steps=95 format=3 uid="uid://bnkhjs011altm"]
+[gd_scene load_steps=98 format=3 uid="uid://bnkhjs011altm"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_gbbei"]
 [ext_resource type="Texture2D" uid="uid://rkqc64bb3v2y" path="res://assets/feet/idle/survivor-idle_0.png" id="75_h5d5a"]
@@ -15,7 +15,9 @@
 [ext_resource type="Texture2D" uid="uid://cg08c5sssijvk" path="res://assets/feet/run/survivor-run_9.png" id="85_rwfg6"]
 [ext_resource type="Texture2D" uid="uid://16c24a4mmru2" path="res://assets/feet/run/survivor-run_10.png" id="86_bj3a7"]
 [ext_resource type="Texture2D" uid="uid://bp6ile1jj2gn6" path="res://assets/feet/run/survivor-run_11.png" id="87_sg112"]
+[ext_resource type="Texture2D" uid="uid://btx0m5yglvb2m" path="res://assets/items/flash_cone_1.7.1.png" id="88_g41ht"]
 [ext_resource type="Texture2D" uid="uid://ddml2w22akhpa" path="res://assets/feet/run/survivor-run_12.png" id="88_mo21q"]
+[ext_resource type="Texture2D" uid="uid://bwgrcbumdq78a" path="res://assets/items/light_1.8.1.png" id="89_aipb6"]
 [ext_resource type="Texture2D" uid="uid://dm53pva0wbup5" path="res://assets/feet/run/survivor-run_13.png" id="89_dg80w"]
 [ext_resource type="Texture2D" uid="uid://elo32frn1v7" path="res://assets/feet/run/survivor-run_14.png" id="90_4a1na"]
 [ext_resource type="Texture2D" uid="uid://dl820brxhooj" path="res://assets/feet/run/survivor-run_15.png" id="91_ixsxl"]
@@ -429,8 +431,21 @@ _data = {
 "shoot": SubResource("Animation_ulet6")
 }
 
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_37dq0"]
+polygon = PackedVector2Array(298, 309, -2, -1, 340, -249, 249, -639, -618, -697, -790, 760, 439, 736)
+
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_gbbei")
+SPEED = 60000.0
+
+[node name="ColorRect2" type="ColorRect" parent="."]
+visible = false
+offset_left = -563.0
+offset_top = -430.0
+offset_right = -523.0
+offset_bottom = -390.0
+scale = Vector2(33.0492, 24.6277)
+color = Color(0, 0, 0, 1)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_3c7qy")
@@ -479,7 +494,7 @@ one_shot = true
 [node name="MuzzleFlash01" type="Sprite2D" parent="."]
 visible = false
 material = SubResource("ShaderMaterial_d2ykc")
-position = Vector2(212, 58)
+position = Vector2(200, 47)
 texture = ExtResource("157_8ebyy")
 
 [node name="pistol_shoot" type="AudioStreamPlayer" parent="."]
@@ -494,15 +509,37 @@ libraries = {
 stream = ExtResource("159_r6wpc")
 
 [node name="ColorRect" type="ColorRect" parent="."]
-visible = false
-offset_left = 117.0
-offset_top = 45.0
-offset_right = 157.0
-offset_bottom = 85.0
-scale = Vector2(7.91883, 0.0982664)
+offset_left = 98.0
+offset_top = 37.0
+offset_right = 138.0
+offset_bottom = 77.0
+scale = Vector2(34.4388, 0.0982664)
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
-target_position = Vector2(1000, 2.08165e-12)
+position = Vector2(99, 38)
+target_position = Vector2(2000, 2.08165e-12)
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+visible = false
+position = Vector2(-9, 4)
+polygon = PackedVector2Array(115, 37, 1373, -440, 1366, 551)
+
+[node name="PointLight2D2" type="PointLight2D" parent="."]
+visible = false
+position = Vector2(641, 38)
+shadow_enabled = true
+texture = ExtResource("88_g41ht")
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+visible = false
+position = Vector2(99, 39)
+occluder = SubResource("OccluderPolygon2D_37dq0")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+position = Vector2(99, 39)
+scale = Vector2(2.4, 2.4)
+shadow_enabled = true
+texture = ExtResource("89_aipb6")
 
 [connection signal="timeout" from="ShootCooldown" to="." method="_on_shoot_cooldown_timeout"]
 [connection signal="timeout" from="ReloadCooldown" to="." method="_on_reload_cooldown_timeout"]
