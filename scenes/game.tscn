@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=4 uid="uid://c3ti58l2cnx03"]
+[gd_scene load_steps=7 format=4 uid="uid://c3ti58l2cnx03"]
 
 [ext_resource type="TileSet" uid="uid://by7jdy2mdxwuy" path="res://tile_sets/game.tres" id="1_e2ycl"]
 [ext_resource type="PackedScene" uid="uid://bnkhjs011altm" path="res://scenes/player.tscn" id="1_vmwar"]
 [ext_resource type="PackedScene" uid="uid://ci1r7tvbbnwbm" path="res://scenes/zombie.tscn" id="2_57hyv"]
 [ext_resource type="Texture2D" uid="uid://btx0m5yglvb2m" path="res://assets/items/flash_cone_1.7.1.png" id="4_j4m6t"]
+[ext_resource type="PackedScene" uid="uid://b5c5h8rdqrjpi" path="res://scenes/item.tscn" id="5_q2d1d"]
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_0ur0q"]
 polygon = PackedVector2Array(-828, -113, -1040, 236, -493, 350)
@@ -11,6 +12,7 @@ polygon = PackedVector2Array(-828, -113, -1040, 236, -493, 350)
 [node name="Game" type="Node2D"]
 
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
+color = Color(0.421731, 0.421731, 0.421731, 1)
 
 [node name="ColorRect" type="ColorRect" parent="."]
 anchors_preset = 8
@@ -38,7 +40,6 @@ rotation = -0.0683225
 [node name="Camera2D" type="Camera2D" parent="Player"]
 position = Vector2(-1.93468e-12, -2.21891e-12)
 rotation = 0.0683225
-position_smoothing_enabled = true
 
 [node name="Zombies" type="Node" parent="."]
 
@@ -87,6 +88,23 @@ position = Vector2(618, 430)
 
 [node name="Zombie11" parent="Zombies" instance=ExtResource("2_57hyv")]
 position = Vector2(1098, -496)
+
+[node name="Items" type="Node" parent="."]
+
+[node name="Item" parent="Items" instance=ExtResource("5_q2d1d")]
+position = Vector2(-832, 829)
+type_item = 2
+
+[node name="Item2" parent="Items" instance=ExtResource("5_q2d1d")]
+position = Vector2(-880, -154)
+type_item = 3
+
+[node name="Item3" parent="Items" instance=ExtResource("5_q2d1d")]
+position = Vector2(-69, 639)
+type_item = 0
+
+[node name="Item4" parent="Items" instance=ExtResource("5_q2d1d")]
+position = Vector2(-386, 992)
 
 [node name="DirectionalLight2D" type="DirectionalLight2D" parent="."]
 visible = false

@@ -15,47 +15,57 @@ const BLOOD = preload("res://scenes/blood.tscn")
 var weapons = [
 	{
 		"name": "light",
+		"index": 0,
 		"range": 10,
 		"damage": 4,
 		"cooldown_shot": 0.5,
 		"cooldown_action": 0.93,
 		"ammo_max": 0,
+		"unlocked": true,
 		# put here the light effect, instead of shooting
 	},
 	{
 		"name": "pistol",
+		"index": 1,
 		"range": 300,
 		"damage": 10,
 		"cooldown_shot": 0.2, # in seconds
 		"cooldown_action": 0.93,
 		"ammo_max": 6,
+		"unlocked": false,
 		# put here the shooting effect
 	},
 	{
 		"name": "rifle",
+		"index": 2,
 		"range": 200,
 		"damage": 15,
 		"cooldown_shot": 0.05,
 		"cooldown_action": 0.93,
 		"ammo_max": 30,
+		"unlocked": false,
 		# put here the shooting effect
 	},
 	{
 		"name": "shotgun",
+		"index": 3,
 		"range": 150,
 		"damage": 20,
 		"cooldown_shot": 0.5,
 		"cooldown_action": 0.93,
 		"ammo_max": 2,
+		"unlocked": false,
 		# put here the shooting effect
 	},
 	{
 		"name": "knife",
+		"index": 4,
 		"range": 50,
 		"damage": 30,
 		"cooldown_shot": 0,
 		"cooldown_action": 0.93,
 		"ammo_max": 0,
+		"unlocked": false,
 		# put here nothing
 	}
 ]
@@ -73,15 +83,24 @@ enum Hold {
 	PISTOL,
 	RIFLE,
 	SHOTGUN,
-	KNIFE,
-	LAST
+	KNIFE
 }
+
+func unlock_weapon(name: String) -> void:
+	for weapon in weapons:
+		if weapon.name == name:
+			weapon.unlocked = true
+			break
+
+
+# ? switch to the new weapon when we unlock it
+# ? reload the weapon when last bullet is shot
 
 class Player:
 	var state := State.IDLE
 	var last_state := State.IDLE
-	var hold := Hold.PISTOL
-	var last_hold := Hold.PISTOL
+	var hold := Hold.FLASHLIGHT
+	var last_hold := Hold.FLASHLIGHT
 
 	var bullets := MAX_BULLETS
 
@@ -161,11 +180,21 @@ class Player:
 		state = State.PUNCH
 		action_cooldown.start()
 
+	func all_unlocked_weapons():
+		var unlocked = []
+		for weapon in weapons:
+			if weapon.unlocked:
+				unlocked.append(weapon)
+		return unlocked
+
 	func change_weapon():
+		var unlocked = all_unlocked_weapons()
+		if unlocked.size() == 1:
+			return
+		var index = unlocked.find(weapons[hold])
+
 		action_cooldown.start()
-		hold += 1
-		if hold == Hold.LAST:
-			hold = Hold.FLASHLIGHT
+		hold = unlocked[(index + 1) % unlocked.size()].index
 		
 		shoot_cooldown.wait_time = weapons[hold].cooldown_shot
 		action_cooldown.wait_time = weapons[hold].cooldown_action

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://csvhhi5s6gfdq"
-path="res://.godot/imported/flashlight.png-ea614b48811af79266d8ed14f17cbec8.ctex"
+uid="uid://daplx8v50wp54"
+path="res://.godot/imported/Ak47Pixel.png-8c05fdc69e553938ad8eac667385f9a9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/items/flashlight.png"
-dest_files=["res://.godot/imported/flashlight.png-ea614b48811af79266d8ed14f17cbec8.ctex"]
+source_file="res://assets/items/weapons/Ak47Pixel.png"
+dest_files=["res://.godot/imported/Ak47Pixel.png-8c05fdc69e553938ad8eac667385f9a9.ctex"]
 
 [params]
 
