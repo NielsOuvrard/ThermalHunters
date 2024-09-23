@@ -122,14 +122,6 @@ class Player:
 		State.PUNCH: "punch"
 	}
 
-	# var hold_to_animation = {
-	# 	Hold.FLASHLIGHT: "light",
-	# 	Hold.PISTOL: "pistol",
-	# 	Hold.RIFLE: "rifle",
-	# 	Hold.SHOTGUN: "shotgun",
-	# 	Hold.KNIFE: "knife"
-	# }
-
 	func _init(_animated_body, _animated_feet, _shoot_cooldown, _action_cooldown, _animation_player, _pistol_reload, _raycast, _weapons, _parent_node):
 		self.animated_body = _animated_body
 		self.animated_feet = _animated_feet
@@ -143,7 +135,7 @@ class Player:
 
 	func update_animation():
 		if state != last_state or hold != last_hold:
-			# animated_body.stop() # do we need this ?
+			# animated_body.stop() # ? do we need this ?
 			animated_body.play(weapons[hold].name + "_" + state_to_animation[state])
 			print(weapons[hold].name + "_" + state_to_animation[state])
 			last_state = state
@@ -156,7 +148,7 @@ class Player:
 		state = State.SHOOTING
 		shoot_cooldown.start()
 		animation_player.stop()
-		animation_player.play("shoot") # sound y flash
+		animation_player.play("shoot") # sound and flash
 		bullets -= 1
 		print("bullets: ", bullets)
 
@@ -199,7 +191,7 @@ class Player:
 		shoot_cooldown.wait_time = weapons[hold].cooldown_shot
 		action_cooldown.wait_time = weapons[hold].cooldown_action
 
-		# ! change later to the animation of the weapon
+		# ! change later to the current anmunition of the weapon
 		bullets = weapons[hold].ammo_max
 
 

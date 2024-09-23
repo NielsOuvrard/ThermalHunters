@@ -1,5 +1,7 @@
 # Thermal Hunter
 
+![Made with Godot 4.3](https://img.shields.io/badge/Made%20with-Godot%204.3-478cbf?logo=godot-engine)
+
 Therma Hunter is a top-down view FPS game developed in Godot Engine. The game features a unique thermal mechanic where players and weapons generate heat, which can be detected by enemies.
 
 ## Player
