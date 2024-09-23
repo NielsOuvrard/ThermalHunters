@@ -467,22 +467,6 @@ sprite_frames = ExtResource("83_tqr4m")
 animation = &"pistol_punch"
 autoplay = "idle"
 
-[node name="Control" type="Control" parent="."]
-visible = false
-layout_mode = 3
-anchors_preset = 0
-offset_left = 179.0
-offset_top = -21.0
-offset_right = 219.0
-offset_bottom = 19.0
-
-[node name="LightTorch" type="ColorRect" parent="Control"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-scale = Vector2(20.6, 1)
-color = Color(1, 1, 1, 0.498039)
-
 [node name="ShootCooldown" type="Timer" parent="."]
 wait_time = 0.2
 one_shot = true

@@ -15,8 +15,7 @@ const BLOOD = preload("res://scenes/blood.tscn")
 
 enum State {
 	IDLE,
-	WALKING,
-	RUNNING,
+	MOVE,
 	SHOOTING,
 	RELOAD,
 	PUNCH
@@ -26,7 +25,8 @@ enum Hold {
 	FLASHLIGHT,
 	PISTOL,
 	RIFLE,
-	SHOTGUN
+	SHOTGUN,
+	KNIFE
 }
 
 enum ControllerType {
@@ -80,19 +80,20 @@ class Player:
 	var raycast
 	var parent_node
 
+	var state_to_animation = {
+		State.IDLE: "idle",
+		State.MOVE: "move",
+		State.SHOOTING: "shoot", # not for flashlight nor knife
+		State.RELOAD: "reload", # not for flashlight nor knife
+		State.PUNCH: "punch"
+	}
+
 	var hold_to_animation = {
 		Hold.FLASHLIGHT: "light",
 		Hold.PISTOL: "pistol",
 		Hold.RIFLE: "rifle",
-		Hold.SHOTGUN: "shotgun"
-	}
-	var state_to_animation = {
-		State.IDLE: "idle",
-		State.WALKING: "move",
-		State.RUNNING: "run",
-		State.SHOOTING: "shoot",
-		State.RELOAD: "reload",
-		State.PUNCH: "punch"
+		Hold.SHOTGUN: "shotgun",
+		Hold.KNIFE: "knife"
 	}
 
 	func _init(_animated_body, _animated_feet, _shoot_cooldown, _reload_cooldown, _animation_player, _pistol_reload, _raycast, _parent_node):
@@ -115,6 +116,13 @@ class Player:
 		print(parent_node) # <CharacterBody2D#83399541991>
 
 	func update_animation():
+		# update_animation isn't called at the right time
+		# should be called after idle / move
+		# should be called after change weapon
+
+		# shoulbe be call change state / change hold
+
+		# print(hold_to_animation[hold] + "_" + state_to_animation[state])
 		animated_body.play(hold_to_animation[hold] + "_" + state_to_animation[state])
 
 
@@ -152,13 +160,24 @@ class Player:
 		is_punching = true
 		update_animation()
 
+	func change_weapon():
+		reload_cooldown.start()
+		is_reloading = true
+		# for now
+		if hold == Hold.FLASHLIGHT:
+			hold = Hold.PISTOL
+			print("change to pistol")
+		else:
+			hold = Hold.FLASHLIGHT
+			print("change to flashlight")
+
 var frame := 0 # for debug
 var player
 
 func _ready():
 	player = Player.new(animated_body, animated_feet, shoot_cooldown, reload_cooldown, animation_player, pistol_reload, raycast, self)
 
-
+# do a boolean varaible "last_action_controller" to know if the last action was with the controller or mouse
 func rotation_player():
 	## * IF WE USE THE KEYBOARD TO LOOK THE PLAYER
 	var direction_input = Vector2.ZERO
@@ -171,27 +190,13 @@ func rotation_player():
 		direction_input.y += Input.get_action_strength('look_down')
 	if Input.is_action_pressed('look_up'):
 		direction_input.y -= Input.get_action_strength('look_up')
-	return direction_input
-	"""
+
 	if direction_input != Vector2.ZERO:
-		rotation = direction_input.angle()
-	else:
-		rotation = 0
+		return direction_input
 
 	var window_size = get_viewport().get_visible_rect().size
 	var mouse_position = get_viewport().get_mouse_position() - window_size / 2
-	
-	## * IF THE CAMERA IS FIXED
-	# var vector_look = Vector2(mouse_position.x - position.x, mouse_position.y - position.y)
-	## * IF THE CAMERA FOLLOWS THE PLAYER
-	var vector_look = mouse_position
-	
-	# return vector_look.angle()  - 0.025 # 0.5 is the offset to make the player look at the mouse
-	## * IF WE USE THE KEYBOARD TO LOOK THE PLAYER
-	return rotation
-	"""
-	
-
+	return mouse_position
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -232,10 +237,13 @@ func _process(delta):
 	if Input.is_action_pressed('melee_attack') and not player.is_punching:
 		player.melee_attack()
 	
+	if Input.is_action_pressed('change_weapon') and not player.is_reloading:
+		print("change weapon")
+		player.change_weapon()
 
 	if not animated_body.is_playing(): # if not state reload nor shoot
 		if direction_input != Vector2.ZERO:
-			player.state = State.WALKING
+			player.state = State.MOVE
 		else:
 			player.state = State.IDLE
 		player.update_animation()
