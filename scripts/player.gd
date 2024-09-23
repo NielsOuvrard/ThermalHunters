@@ -1,12 +1,12 @@
 extends CharacterBody2D
 
-@onready var animated_body = $Body
-@onready var animated_feet = $Feet
-@onready var shoot_cooldown = $ShootCooldown
+@onready var animated_body: AnimatedSprite2D = $Body
+@onready var animated_feet: AnimatedSprite2D = $Feet
+@onready var shoot_cooldown: Timer = $ShootCooldown
 @onready var action_cooldown: Timer = $ActionCooldown
-@onready var animation_player = $AnimationPlayer
-@onready var pistol_reload = $pistol_reload
-@onready var raycast = $RayCast2D
+@onready var animation_player: AnimationPlayer = $AnimationPlayer
+@onready var pistol_reload: AudioStreamPlayer2D = $pistol_reload
+@onready var raycast: RayCast2D = $RayCast2D
 
 @export var SPEED = 300.0
 const MAX_BULLETS = 6
@@ -125,7 +125,6 @@ func _ready():
 
 # do a boolean varaible "last_action_controller" to know if the last action was with the controller or mouse
 func rotation_player():
-	## * IF WE USE THE KEYBOARD TO LOOK THE PLAYER
 	var direction_input = Vector2.ZERO
 
 	if Input.is_action_pressed('look_right'):
@@ -137,15 +136,18 @@ func rotation_player():
 	if Input.is_action_pressed('look_up'):
 		direction_input.y -= Input.get_action_strength('look_up')
 
+	# * if we are using the controller
 	if direction_input != Vector2.ZERO:
 		return direction_input
 
+	# * if we are using the mouse
 	var window_size = get_viewport().get_visible_rect().size
 	var mouse_position = get_viewport().get_mouse_position() - window_size / 2
 	return mouse_position
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	# * movement
 	var direction_input = Vector2.ZERO
 
 	if Input.is_action_pressed('fmove_right'):
@@ -156,10 +158,6 @@ func _process(delta):
 		direction_input.y += Input.get_action_strength('fmove_down')
 	if Input.is_action_pressed('fmove_up'):
 		direction_input.y -= Input.get_action_strength('fmove_up')
-		
-	var rotation_vector = rotation_player()
-	if rotation_vector != Vector2.ZERO:
-		rotation = rotation_vector.angle()
 
 	var direction = direction_input
 	if direction != Vector2.ZERO:
@@ -167,8 +165,12 @@ func _process(delta):
 	else:
 		velocity = Vector2.ZERO
 		
-	
-
+	# * rotation
+	var rotation_vector = rotation_player()
+	if rotation_vector != Vector2.ZERO:
+		rotation = rotation_vector.angle()
+		
+	# * actions
 	if action_cooldown.is_stopped():
 		if Input.is_action_pressed('shoot') and shoot_cooldown.is_stopped():
 			player.shoot()
@@ -182,12 +184,14 @@ func _process(delta):
 		if Input.is_action_pressed('change_weapon'):
 			player.change_weapon()
 
+	# * if we are not doing any action -> idle or move
 	if action_cooldown.is_stopped() and shoot_cooldown.is_stopped():
 		if direction_input != Vector2.ZERO:
 			player.state = State.MOVE
 		else:
 			player.state = State.IDLE
 	
+	# * animations feet
 	if direction_input != Vector2.ZERO:
 		if direction_input.x == 1:
 			animated_feet.play("strafe_right")
