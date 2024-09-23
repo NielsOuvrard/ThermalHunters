@@ -468,10 +468,10 @@ animation = &"pistol_punch"
 autoplay = "idle"
 
 [node name="ShootCooldown" type="Timer" parent="."]
-wait_time = 0.2
+wait_time = 0.4
 one_shot = true
 
-[node name="ReloadCooldown" type="Timer" parent="."]
+[node name="ActionCooldown" type="Timer" parent="."]
 wait_time = 0.93
 one_shot = true
 
@@ -524,6 +524,3 @@ position = Vector2(99, 39)
 scale = Vector2(2.4, 2.4)
 shadow_enabled = true
 texture = ExtResource("89_aipb6")
-
-[connection signal="timeout" from="ShootCooldown" to="." method="_on_shoot_cooldown_timeout"]
-[connection signal="timeout" from="ReloadCooldown" to="." method="_on_reload_cooldown_timeout"]
