@@ -464,8 +464,8 @@ frame_progress = 0.784936
 
 [node name="Body" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("83_tqr4m")
-animation = &"pistol_punch"
-autoplay = "idle"
+animation = &"pistol_idle"
+autoplay = "pistol_idle"
 
 [node name="ShootCooldown" type="Timer" parent="."]
 wait_time = 0.4

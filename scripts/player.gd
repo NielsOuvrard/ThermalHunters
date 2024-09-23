@@ -26,7 +26,8 @@ enum Hold {
 	PISTOL,
 	RIFLE,
 	SHOTGUN,
-	KNIFE
+	KNIFE,
+	LAST
 }
 
 class Player:
@@ -110,13 +111,9 @@ class Player:
 
 	func change_weapon():
 		action_cooldown.start()
-		# for now
-		if hold == Hold.FLASHLIGHT:
-			hold = Hold.PISTOL
-			print("change to pistol")
-		else:
+		hold += 1
+		if hold == Hold.LAST:
 			hold = Hold.FLASHLIGHT
-			print("change to flashlight")
 
 var player
 
