@@ -12,6 +12,53 @@ extends CharacterBody2D
 const MAX_BULLETS = 6
 const BLOOD = preload("res://scenes/blood.tscn")
 
+var weapons = [
+	{
+		"name": "light",
+		"range": 10,
+		"damage": 4,
+		"cooldown_shot": 0.5,
+		"cooldown_action": 0.93,
+		"ammo_max": 0,
+		# put here the light effect, instead of shooting
+	},
+	{
+		"name": "pistol",
+		"range": 300,
+		"damage": 10,
+		"cooldown_shot": 0.2, # in seconds
+		"cooldown_action": 0.93,
+		"ammo_max": 6,
+		# put here the shooting effect
+	},
+	{
+		"name": "rifle",
+		"range": 200,
+		"damage": 15,
+		"cooldown_shot": 0.05,
+		"cooldown_action": 0.93,
+		"ammo_max": 30,
+		# put here the shooting effect
+	},
+	{
+		"name": "shotgun",
+		"range": 150,
+		"damage": 20,
+		"cooldown_shot": 0.5,
+		"cooldown_action": 0.93,
+		"ammo_max": 2,
+		# put here the shooting effect
+	},
+	{
+		"name": "knife",
+		"range": 50,
+		"damage": 30,
+		"cooldown_shot": 0,
+		"cooldown_action": 0.93,
+		"ammo_max": 0,
+		# put here nothing
+	}
+]
 
 enum State {
 	IDLE,
@@ -45,6 +92,7 @@ class Player:
 	var animation_player
 	var pistol_reload
 	var raycast
+	var weapons
 	var parent_node
 
 	var state_to_animation = {
@@ -55,15 +103,15 @@ class Player:
 		State.PUNCH: "punch"
 	}
 
-	var hold_to_animation = {
-		Hold.FLASHLIGHT: "light",
-		Hold.PISTOL: "pistol",
-		Hold.RIFLE: "rifle",
-		Hold.SHOTGUN: "shotgun",
-		Hold.KNIFE: "knife"
-	}
+	# var hold_to_animation = {
+	# 	Hold.FLASHLIGHT: "light",
+	# 	Hold.PISTOL: "pistol",
+	# 	Hold.RIFLE: "rifle",
+	# 	Hold.SHOTGUN: "shotgun",
+	# 	Hold.KNIFE: "knife"
+	# }
 
-	func _init(_animated_body, _animated_feet, _shoot_cooldown, _action_cooldown, _animation_player, _pistol_reload, _raycast, _parent_node):
+	func _init(_animated_body, _animated_feet, _shoot_cooldown, _action_cooldown, _animation_player, _pistol_reload, _raycast, _weapons, _parent_node):
 		self.animated_body = _animated_body
 		self.animated_feet = _animated_feet
 		self.shoot_cooldown = _shoot_cooldown
@@ -71,13 +119,14 @@ class Player:
 		self.animation_player = _animation_player
 		self.pistol_reload = _pistol_reload
 		self.raycast = _raycast
+		self.weapons = _weapons
 		self.parent_node = _parent_node
 
 	func update_animation():
 		if state != last_state or hold != last_hold:
 			# animated_body.stop() # do we need this ?
-			animated_body.play(hold_to_animation[hold] + "_" + state_to_animation[state])
-			print(hold_to_animation[hold] + "_" + state_to_animation[state])
+			animated_body.play(weapons[hold].name + "_" + state_to_animation[state])
+			print(weapons[hold].name + "_" + state_to_animation[state])
 			last_state = state
 			last_hold = hold
 
@@ -90,6 +139,7 @@ class Player:
 		animation_player.stop()
 		animation_player.play("shoot") # sound y flash
 		bullets -= 1
+		print("bullets: ", bullets)
 
 		if raycast.is_colliding():
 			var collider = raycast.get_collider()
@@ -100,10 +150,12 @@ class Player:
 				collider.queue_free()
 
 	func reload():
+		if bullets == weapons[hold].ammo_max:
+			return
 		state = State.RELOAD
 		action_cooldown.start()
 		pistol_reload.play()
-		bullets = MAX_BULLETS
+		bullets = weapons[hold].ammo_max
 
 	func melee_attack():
 		state = State.PUNCH
@@ -114,11 +166,18 @@ class Player:
 		hold += 1
 		if hold == Hold.LAST:
 			hold = Hold.FLASHLIGHT
+		
+		shoot_cooldown.wait_time = weapons[hold].cooldown_shot
+		action_cooldown.wait_time = weapons[hold].cooldown_action
+
+		# ! change later to the animation of the weapon
+		bullets = weapons[hold].ammo_max
+
 
 var player
 
 func _ready():
-	player = Player.new(animated_body, animated_feet, shoot_cooldown, action_cooldown, animation_player, pistol_reload, raycast, self)
+	player = Player.new(animated_body, animated_feet, shoot_cooldown, action_cooldown, animation_player, pistol_reload, raycast, weapons, self)
 
 # do a boolean varaible "last_action_controller" to know if the last action was with the controller or mouse
 func rotation_player():
@@ -189,10 +248,11 @@ func _process(delta):
 			player.state = State.IDLE
 	
 	# * animations feet
-	if direction_input != Vector2.ZERO:
-		if direction_input.x == 1:
+	# ! should be according to the direction AND the rotation
+	if direction != Vector2.ZERO:
+		if direction.x >= 0.9:
 			animated_feet.play("strafe_right")
-		elif direction_input.x == -1:
+		elif direction.x <= -0.9:
 			animated_feet.play("strafe_left")
 		else:
 			animated_feet.play("walk")
